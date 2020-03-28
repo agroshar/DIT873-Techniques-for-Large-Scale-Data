@@ -35,7 +35,8 @@ def plot(speedup):
     plt.xlabel('Number of cores')
     plt.ylabel('Speedup')
     plt.legend()
-    plt.show()
+    plt.savefig('speedup_graph.png')
+    # plt.show()
 
 
 def main():
