@@ -82,10 +82,13 @@ def compute_pi_with_accuracy(workers, accuracy):
     :param workers: number of threads
     :param accuracy: goal accuracy of the calculated value
     """
+    random.seed(1)
+    default_steps = 1000
+    n = int(default_steps / workers)
+
     accuracy = abs(accuracy)
 
     queue = mp.JoinableQueue()
-    default_steps = 1000
 
     s_total, n_total, pi_est, error = 0, 0, 0, inf
 
@@ -93,15 +96,15 @@ def compute_pi_with_accuracy(workers, accuracy):
     start_time = time.time()
 
     while time.time() - start_time < timeout_val:
-        print('Error: {}'.format(error), end='\r')
-
-        processes = [create_process(default_steps, queue) for _ in range(workers)]
+        processes = [create_process(n, queue) for _ in range(workers)]
 
         while not queue.empty(): s_total += queue.get()
 
-        n_total += default_steps
+        n_total += n * workers
         pi_est = (4.0 * s_total) / n_total
+
         error = pi - pi_est
+        print('Current accuracy: {}'.format(error), end='\r')
 
         if abs(error) <= accuracy:
             for process in processes: process.terminate()
