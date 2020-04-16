@@ -2,7 +2,20 @@ import multiprocessing as mp  # See https://docs.python.org/3/library/multiproce
 import argparse  # See https://docs.python.org/3/library/argparse.html
 import random
 from math import pi
+import time
 
+
+def print_result(n_total, s_total, pi_est, error):
+    """
+    Prints nicely formatted result of a simulation.
+
+    :param n_total: total number of steps
+    :param s_total: number of successes
+    :param pi_est: estimated pi value
+    :param error: difference between estimated and real values
+    """
+    print(" Steps\tSuccess\tPi est.\tError")
+    print("%6d\t%7d\t%1.5f\t%1.5f" % (n_total, s_total, pi_est, error))
 
 def sample_pi(n, queue=None):
     """
@@ -11,7 +24,7 @@ def sample_pi(n, queue=None):
 
     :param n: number of steps per worker
     :param queue: optional queue object
-    :return: number of sucesses
+    :return: number of successes
     """
     random.seed()
     print("Hello from a worker")
@@ -43,20 +56,19 @@ def compute_pi_with_steps(workers, steps):
     n_total = n * workers
     s_total = sum(s)
     pi_est = (4.0 * s_total) / n_total
-    print(" Steps\tSuccess\tPi est.\tError")
-    print("%6d\t%7d\t%1.5f\t%1.5f" % (n_total, s_total, pi_est, pi - pi_est))
+
+    print_result(n_total, s_total, pi_est, pi - pi_est)
 
 
-def create_process(queue):
+def create_process(steps, queue):
     """
     Creates and starts a worker process.
 
+    :param steps: number of steps per worker
     :param queue: a queue tu put results on
     :return: process
     """
-    max_steps = 1_000_000  # to prevent the code from running forever
-
-    process = mp.Process(target=sample_pi, args=(max_steps, queue))
+    process = mp.Process(target=sample_pi, args=(steps, queue))
     process.start()
     process.join()
 
@@ -70,10 +82,32 @@ def compute_pi_with_accuracy(workers, accuracy):
     :param workers: number of threads
     :param accuracy: goal accuracy of the calculated value
     """
-    queue = mp.JoinableQueue()
-    processes = [create_process(queue) for _ in range(workers)]
+    accuracy = abs(accuracy)
 
-    while not queue.empty()
+    queue = mp.JoinableQueue()
+    default_steps = 10
+
+    s_total, n_total, pi_est, error = 0, 0, 0, 0
+
+    timeout_val = 30
+    start_time = time.time()
+
+    while time.time() - start_time < timeout_val:
+        processes = [create_process(default_steps, queue) for _ in range(workers)]
+
+        while not queue.empty(): s_total += queue.get()
+
+        n_total += default_steps * workers
+        pi_est = (4.0 * s_total) / n_total
+        error = pi - pi_est
+
+        if abs(error) <= accuracy:
+            for process in processes: process.terminate()
+            print_result(n_total, s_total, pi_est, error)
+            return
+
+    print("ERROR: Timeout!")
+
 
 def compute_pi(args):
     """
