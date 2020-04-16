@@ -1,12 +1,18 @@
-import multiprocessing  # See https://docs.python.org/3/library/multiprocessing.html
+import multiprocessing as mp  # See https://docs.python.org/3/library/multiprocessing.html
 import argparse  # See https://docs.python.org/3/library/argparse.html
 import random
 from math import pi
 
 
-def sample_pi(n):
-    """ Perform n steps of Monte Carlo simulation for estimating Pi/4.
-        Returns the number of sucesses."""
+def sample_pi(n, queue=None):
+    """
+    A worker function. Performs n steps of Monte Carlo simulation for estimating Pi/4.
+    If a queue object is given then the result is put there.
+
+    :param n: number of steps per worker
+    :param queue: optional queue object
+    :return: number of sucesses
+    """
     random.seed()
     print("Hello from a worker")
     s = 0
@@ -15,14 +21,23 @@ def sample_pi(n):
         y = random.random()
         if x ** 2 + y ** 2 <= 1.0:
             s += 1
+
+    if queue: queue.put(s)
+
     return s
 
 
 def compute_pi_with_steps(workers, steps):
+    """
+    Computes pi using MC simulation with arbitrary maximum number of steps and threads.
+
+    :param workers: number of threads
+    :param steps: maximum number of steps in simulation
+    """
     random.seed(1)
     n = int(steps / workers)
 
-    p = multiprocessing.Pool(workers)
+    p = mp.Pool(workers)
     s = p.map(sample_pi, [n] * workers)
 
     n_total = n * workers
@@ -32,11 +47,40 @@ def compute_pi_with_steps(workers, steps):
     print("%6d\t%7d\t%1.5f\t%1.5f" % (n_total, s_total, pi_est, pi - pi_est))
 
 
-def compute_pi_with_accuracy(workers, accuracy):
-    print("xD")
+def create_process(queue):
+    """
+    Creates and starts a worker process.
 
+    :param queue: a queue tu put results on
+    :return: process
+    """
+    max_steps = 1_000_000  # to prevent the code from running forever
+
+    process = mp.Process(target=sample_pi, args=(max_steps, queue))
+    process.start()
+    process.join()
+
+    return process
+
+
+def compute_pi_with_accuracy(workers, accuracy):
+    """
+    Computes pi using MC simulation arbitrary number of threads until reaching given accuracy.
+
+    :param workers: number of threads
+    :param accuracy: goal accuracy of the calculated value
+    """
+    queue = mp.JoinableQueue()
+    processes = [create_process(queue) for _ in range(workers)]
+
+    while not queue.empty()
 
 def compute_pi(args):
+    """
+    Chooses the correct function to call based on given arguments.
+
+    :param args: object containing parsed arguments
+    """
     if args.steps:
         compute_pi_with_steps(args.workers, args.steps)
         return
@@ -49,6 +93,11 @@ def compute_pi(args):
 
 
 def parse_arguments():
+    """
+    Parses given arguments or evaluate default values.
+
+    :return: object containing parsed arguments
+    """
     parser = argparse.ArgumentParser(description='Compute Pi using Monte Carlo simulation.')
 
     parser.add_argument('--workers', '-w',
