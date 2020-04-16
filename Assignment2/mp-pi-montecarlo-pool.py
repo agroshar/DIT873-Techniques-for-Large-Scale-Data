@@ -18,29 +18,60 @@ def sample_pi(n):
     return s
 
 
-def compute_pi(args):
+def compute_pi_with_steps(workers, steps):
     random.seed(1)
-    n = int(args.steps / args.workers)
+    n = int(steps / workers)
 
-    p = multiprocessing.Pool(args.workers)
-    s = p.map(sample_pi, [n] * args.workers)
+    p = multiprocessing.Pool(workers)
+    s = p.map(sample_pi, [n] * workers)
 
-    n_total = n * args.workers
+    n_total = n * workers
     s_total = sum(s)
     pi_est = (4.0 * s_total) / n_total
     print(" Steps\tSuccess\tPi est.\tError")
     print("%6d\t%7d\t%1.5f\t%1.5f" % (n_total, s_total, pi_est, pi - pi_est))
 
 
-if __name__ == "__main__":
+def compute_pi_with_accuracy(workers, accuracy):
+    print("xD")
+
+
+def compute_pi(args):
+    if args.steps:
+        compute_pi_with_steps(args.workers, args.steps)
+        return
+
+    if args.accuracy:
+        compute_pi_with_accuracy(args.workers, args.accuracy)
+        return
+
+    print('ERROR: This code should be unreachable!')
+
+
+def parse_arguments():
     parser = argparse.ArgumentParser(description='Compute Pi using Monte Carlo simulation.')
+
     parser.add_argument('--workers', '-w',
-                        default='1',
+                        default=1,
                         type=int,
                         help='Number of parallel processes')
-    parser.add_argument('--steps', '-s',
-                        default='1000',
-                        type=int,
-                        help='Number of steps in the Monte Carlo simulation')
+    mutex_group = parser.add_mutually_exclusive_group()
+    mutex_group.add_argument('--steps', '-s',
+                             type=int,
+                             help='Number of steps in the Monte Carlo simulation')
+    mutex_group.add_argument('--accuracy', '-a',
+                             type=float,
+                             help='Goal accuracy of the Monte Carlo simulation result')
+
     args = parser.parse_args()
+
+    if not args.steps and not args.accuracy:
+        parser.set_defaults(steps=1000)
+        args = parser.parse_args()
+
+    return args
+
+
+if __name__ == "__main__":
+    args = parse_arguments()
     compute_pi(args)
