@@ -1,7 +1,7 @@
 import multiprocessing as mp  # See https://docs.python.org/3/library/multiprocessing.html
 import argparse  # See https://docs.python.org/3/library/argparse.html
 import random
-from math import pi
+from math import pi, inf
 import time
 
 
@@ -14,7 +14,7 @@ def print_result(n_total, s_total, pi_est, error):
     :param pi_est: estimated pi value
     :param error: difference between estimated and real values
     """
-    print(" Steps\tSuccess\tPi est.\tError")
+    print("\n Steps\tSuccess\tPi est.\tError")
     print("%6d\t%7d\t%1.5f\t%1.5f" % (n_total, s_total, pi_est, error))
 
 def sample_pi(n, queue=None):
@@ -27,8 +27,9 @@ def sample_pi(n, queue=None):
     :return: number of successes
     """
     random.seed()
-    print("Hello from a worker")
+    # print("Hello from a worker")
     s = 0
+
     for i in range(n):
         x = random.random()
         y = random.random()
@@ -70,7 +71,6 @@ def create_process(steps, queue):
     """
     process = mp.Process(target=sample_pi, args=(steps, queue))
     process.start()
-    process.join()
 
     return process
 
@@ -85,19 +85,21 @@ def compute_pi_with_accuracy(workers, accuracy):
     accuracy = abs(accuracy)
 
     queue = mp.JoinableQueue()
-    default_steps = 10
+    default_steps = 1000
 
-    s_total, n_total, pi_est, error = 0, 0, 0, 0
+    s_total, n_total, pi_est, error = 0, 0, 0, inf
 
     timeout_val = 30
     start_time = time.time()
 
     while time.time() - start_time < timeout_val:
+        print('Error: {}'.format(error), end='\r')
+
         processes = [create_process(default_steps, queue) for _ in range(workers)]
 
         while not queue.empty(): s_total += queue.get()
 
-        n_total += default_steps * workers
+        n_total += default_steps
         pi_est = (4.0 * s_total) / n_total
         error = pi - pi_est
 
