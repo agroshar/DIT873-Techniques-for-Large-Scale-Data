@@ -60,20 +60,6 @@ def compute_pi_with_steps(workers, steps):
     print_result(n_total, s_total, pi_est, pi - pi_est)
 
 
-def create_process(steps, queue):
-    """
-    Creates and starts a worker process.
-
-    :param steps: number of steps per worker
-    :param queue: a queue tu put results on
-    :return: process
-    """
-    process = mp.Process(target=sample_pi, args=(steps, queue))
-    process.start()
-
-    return process
-
-
 def compute_pi_with_accuracy(workers, accuracy):
     """
     Computes pi using MC simulation arbitrary number of threads until reaching given accuracy.
@@ -85,13 +71,13 @@ def compute_pi_with_accuracy(workers, accuracy):
     default_steps = 1000
     n = int(default_steps / workers)
 
-    queue = mp.JoinableQueue()
+    queue = mp.Queue()
 
     s_total, n_total, pi_est, error = 0, 0, 0, inf
-    processes = None
 
     while abs(error) > abs(accuracy):
-        processes = [create_process(n, queue) for _ in range(workers)]
+        processes = mp.Pool(workers, sample_pi, (n, queue))
+        processes.close()
 
         while not queue.empty(): s_total += queue.get()
 
@@ -99,9 +85,8 @@ def compute_pi_with_accuracy(workers, accuracy):
         pi_est = (4.0 * s_total) / n_total
 
         error = pi - pi_est
-        # print('Current accuracy: {}'.format(error), end='\r')
+        #print('Current accuracy: {}'.format(error), end='\r')
 
-    for process in processes: process.terminate()
     print_result(n_total, s_total, pi_est, error)
 
 

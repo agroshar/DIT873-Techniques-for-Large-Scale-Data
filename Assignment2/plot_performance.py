@@ -32,6 +32,7 @@ def run_all(cores, accuracy):
 def plot(speedup):
     plt.plot(*zip(*sorted(speedup.items())), label='Real')
     plt.plot([*speedup], [*speedup], label='Theoretical')
+    plt.xticks(list(speedup.keys()))
     plt.xlabel('Number of cores')
     plt.ylabel('Speedup')
     plt.legend()
@@ -41,7 +42,7 @@ def plot(speedup):
 
 def main():
     cores = [1, 2, 4, 8, 16, 32]
-    accuracy = 1e-6
+    accuracy = 1e-5
     speedup = run_all(cores, accuracy)
     plot(speedup)
 
