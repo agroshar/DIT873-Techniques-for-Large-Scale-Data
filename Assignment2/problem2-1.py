@@ -2,7 +2,6 @@ import multiprocessing as mp  # See https://docs.python.org/3/library/multiproce
 import argparse  # See https://docs.python.org/3/library/argparse.html
 import random
 from math import pi, inf
-import time
 
 
 def print_result(n_total, s_total, pi_est, error):
@@ -86,16 +85,12 @@ def compute_pi_with_accuracy(workers, accuracy):
     default_steps = 1000
     n = int(default_steps / workers)
 
-    accuracy = abs(accuracy)
-
     queue = mp.JoinableQueue()
 
     s_total, n_total, pi_est, error = 0, 0, 0, inf
+    processes = None
 
-    timeout_val = 30
-    start_time = time.time()
-
-    while time.time() - start_time < timeout_val:
+    while abs(error) > abs(accuracy):
         processes = [create_process(n, queue) for _ in range(workers)]
 
         while not queue.empty(): s_total += queue.get()
@@ -104,14 +99,10 @@ def compute_pi_with_accuracy(workers, accuracy):
         pi_est = (4.0 * s_total) / n_total
 
         error = pi - pi_est
-        print('Current accuracy: {}'.format(error), end='\r')
+        # print('Current accuracy: {}'.format(error), end='\r')
 
-        if abs(error) <= accuracy:
-            for process in processes: process.terminate()
-            print_result(n_total, s_total, pi_est, error)
-            return
-
-    print("ERROR: Timeout!")
+    for process in processes: process.terminate()
+    print_result(n_total, s_total, pi_est, error)
 
 
 def compute_pi(args):
