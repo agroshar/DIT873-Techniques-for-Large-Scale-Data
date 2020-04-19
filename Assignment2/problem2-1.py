@@ -68,7 +68,7 @@ def compute_pi_with_accuracy(workers, accuracy):
     :param accuracy: goal accuracy of the calculated value
     """
     random.seed(1)
-    default_steps = 1000
+    default_steps = 10000
     n = int(default_steps / workers)
 
     queue = mp.Queue()
