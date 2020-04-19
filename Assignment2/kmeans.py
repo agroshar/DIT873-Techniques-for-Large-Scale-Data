@@ -10,7 +10,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import make_blobs
 import time
-from statistics import mean
 
 
 def generateData(n, c):
@@ -70,10 +69,11 @@ def kmeans(k, data, nr_iter=100):
         logging.debug(c)
         logging.debug(centroids)
 
-    print('Average clustering time: {}'.format(mean(clustering_times)))
-    print('Average updating time: {}'.format(mean(updating_times)))
-    
-    return total_variation, c
+    total_clustering, total_updating = sum(clustering_times), sum(updating_times)
+    print('Total assigning time: {}'.format(total_clustering))
+    print('Total updating time: {}'.format(total_updating))
+
+    return total_variation, c, total_clustering + total_updating
 
 
 def computeClustering(args):
@@ -87,11 +87,13 @@ def computeClustering(args):
     start_time = time.time()
     #
     # Modify kmeans code to use args.worker parallel threads
-    total_variation, assignment = kmeans(args.k_clusters, X, nr_iter=args.iterations)
+    total_variation, assignment, parallelizable_time = kmeans(args.k_clusters, X, nr_iter=args.iterations)
     #
     #
     end_time = time.time()
-    logging.info("Clustering complete in %3.2f [s]" % (end_time - start_time))
+    total_time = end_time - start_time
+    logging.info("Clustering complete in %f [s]" % (total_time))
+    logging.info("Parallelizable fraction: {}".format(parallelizable_time / total_time))
     print(f"Total variation {total_variation}")
 
     if args.plot:  # Assuming 2D data
