@@ -1,0 +1,22 @@
+slurmstepd-bayes: error: "no " is not a valid option for "CgroupAutomount"
+slurmstepd-bayes: error: "yes " is not a valid option for "ConstrainCores"
+Start script!
+
+ Steps	Success	Pi est.	Error
+12220000	9597585	3.14160	-0.00001
+
+ Steps	Success	Pi est.	Error
+264000	 207345	3.14159	0.00000
+
+ Steps	Success	Pi est.	Error
+462000	 362854	3.14159	-0.00000
+
+ Steps	Success	Pi est.	Error
+400000	 314160	3.14160	-0.00001
+
+ Steps	Success	Pi est.	Error
+223200	 175301	3.14159	-0.00000
+
+ Steps	Success	Pi est.	Error
+182528	 143357	3.14159	0.00000
+Done!
