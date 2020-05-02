@@ -26,7 +26,6 @@ def plot(speedup):
     ax1.plot(*zip(*sorted(speedup.items())), label='Real')
     ax1.plot([*speedup], [*speedup], label='Theoretical')
     ax1.set_xticks(list(speedup.keys()))
-    ax1.set_xlabel('Number of cores')
     ax1.set_ylabel('Speedup')
     ax1.legend()
 
@@ -35,10 +34,10 @@ def plot(speedup):
     ax2.set_xlabel('Number of cores')
     ax2.set_ylabel('Speedup')
 
-    fig.savefig('speedup_graph.png')
+    fig.savefig('output/speedup_graph.png')
 
 
 if __name__ == '__main__':
-    performance = read_data('time_measurements.txt')
+    performance = read_data('output/time_measurements.txt')
     speedup = calculate_speedup(performance)
     plot(speedup)
