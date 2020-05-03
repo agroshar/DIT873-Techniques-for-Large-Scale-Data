@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     for size in data_sizes:
         command = 'sbatch --cpus-per-task=8 /opt/local/bin/run_job.sh ' +\
-                  'problem3-1.py ' +\
+                  'problem1d.py ' +\
                   '-d data/temp/{}.dat '.format(size) +\
                   '-t True -l {}'.format(size)
         subprocess.run(command.split())
