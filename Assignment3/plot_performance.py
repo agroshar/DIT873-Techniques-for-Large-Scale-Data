@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+from sys import argv
 
 
 def read_data(filename):
@@ -38,6 +39,6 @@ def plot(speedup):
 
 
 if __name__ == '__main__':
-    performance = read_data('output/time_measurements.txt')
+    performance = read_data(argv[1])
     speedup = calculate_speedup(performance)
     plot(speedup)
