@@ -10,9 +10,15 @@ tempfile.tempdir = '/data/tmp'
 
 
 class Summary(MRJob):
-    def mapper(self, _, line):
-        _, _, value = line.split()
-        yield 'val', float(value)
+    def __init__(self, args=None):
+        super(Summary, self).__init__(args)
+        self.group = self.options.group
+
+    def mapper(self, _, record):
+        _, group, value = record.split()
+
+        if self.group is None or self.group == int(group):
+            yield 'val', float(value)
 
     def reducer(self, _, values):
         val_list = np.fromiter(values, dtype=float)
@@ -49,8 +55,8 @@ def parse_arguments():
                         type=bool,
                         help="Measuring time of the run and writing it to the file")
     parser.add_argument('--group', '-g',
-                        default='',
-                        type=str,
+                        default=None,
+                        type=int,
                         help="Group to filter the records")
     args = parser.parse_args()
 
