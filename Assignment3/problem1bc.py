@@ -1,17 +1,15 @@
 from mrjob.job import MRJob
 import tempfile
 from matplotlib.pyplot import hist
+from time import process_time
 import numpy as np
+import sys
 
 
 tempfile.tempdir = '/data/tmp'
 
 
 class Summary(MRJob):
-    def __init__(self, args=None):
-        super(Summary, self).__init__(args)
-        self.group = self.options.group
-
     def mapper(self, _, record):
         _, group, value = record.split()
 
@@ -30,13 +28,14 @@ class Summary(MRJob):
 
         yield 'hist', (bin_sizes, edges)
 
-    def configure_args(self):
-        super(Summary, self).configure_args()
-        self.add_passthru_arg('--group', '-g',
-                              default=None,
-                              type=int,
-                              help="Group to filter the records")
-
 
 if __name__ == '__main__':
+    output_param = sys.argv[-1]
+    sys.argv = sys.argv[:2]
+
+    start = process_time()
     Summary.run()
+    measured_time = process_time() - start
+
+    with open('output/time_measurements.txt', 'a') as f:
+        f.write('\n{}   {}'.format(str(output_param), str(measured_time)))
