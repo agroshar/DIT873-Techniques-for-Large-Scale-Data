@@ -8,8 +8,7 @@ tempfile.tempdir = '/data/tmp'
 
 
 class Summary(MRJob):
-    def __init__(self, args=None):
-        super(Summary, self).__init__(args)
+    def mapper_init(self):
         self.group = self.options.group
 
     def mapper(self, _, record):
