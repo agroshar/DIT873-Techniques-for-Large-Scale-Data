@@ -8,6 +8,9 @@ from queries import *
 def construct_dataframe_from_wikidata(query):
     def send_request():
         return requests.get('https://query.wikidata.org/sparql',
+                            headers={
+                                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 ('
+                                              'KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'},
                             params={'format': 'json',
                                     'query': query})
 
@@ -22,18 +25,24 @@ def construct_dataframe_from_wikidata(query):
     labels, records = [list(data.values())[0] for data in resp.json().values()]
 
     print("Creating dataframe...")
-    entries = [[values['value'] for values in record.values()] for record in records]
+    entries = []
+    for record in records:
+        entry = dict.fromkeys(labels)
+        for label, values in record.items():
+            entry[label] = values['value']
+        entries.append(entry)
+
     df = pd.DataFrame(entries, columns=labels)
 
     return df
 
 
 if __name__ == '__main__':
-    # universities_df = construct_dataframe_from_wikidata(universities_query)
-    # universities_df.to_csv('data/universities.csv')
+    universities_df = construct_dataframe_from_wikidata(universities_query)
+    universities_df.to_csv('data/universities.csv')
 
-    # alumni_df = construct_dataframe_from_wikidata(alumni_query)
-    # alumni_df.to_csv('data/alumni.csv')
+    alumni_df = construct_dataframe_from_wikidata(alumni_query)
+    alumni_df.to_csv('data/alumni.csv')
 
     organisations_df = construct_dataframe_from_wikidata(organisations_query)
     organisations_df.to_csv('data/organisations.csv')
