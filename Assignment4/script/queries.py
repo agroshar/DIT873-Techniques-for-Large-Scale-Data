@@ -1,12 +1,14 @@
 universities_query = """
-SELECT ?universityLabel ?countryLabel (YEAR(?inception) AS ?yearFounded)
+SELECT ?universityLabel ?placeLabel ?countryLabel (YEAR(?inception) AS ?yearFounded)
 
 WHERE
 {
-  ?university wdt:P31 wd:Q3918 .
-  ?university wdt:P17 wd:Q34 .
-  ?university wdt:P571 ?inception .
   ?university wdt:P17 ?country .
+  FILTER (?country = wd:Q34) .
+  
+  ?university wdt:P31 wd:Q3918 ;
+              wdt:P571 ?inception ;
+              wdt:P131 ?place .
 
   SERVICE wikibase:label {bd:serviceParam wikibase:language "en,sv,[AUTO_LANGUAGE]" .}
 }

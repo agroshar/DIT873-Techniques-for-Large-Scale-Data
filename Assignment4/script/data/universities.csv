@@ -1,25 +1,24 @@
-,universityLabel,countryLabel,yearFounded
-0,Lund University,Sweden,1666
-1,Karolinska Institute,Sweden,1810
-2,Stockholm University,Sweden,1878
-3,University of Gothenburg,Sweden,1954
-4,Uppsala University,Sweden,1477
-5,Karlstad University,Sweden,1977
-6,Mid Sweden University,Sweden,1993
-7,Luleå University of Technology,Sweden,1971
-8,Norrland's University Hospital,Sweden,1907
-9,Örebro University,Sweden,1977
-10,Swedish University of Agricultural Sciences,Sweden,1977
-11,University of Borås,Sweden,1977
-12,Linnaeus University,Sweden,2010
-13,Linköping University,Sweden,1975
-14,Chalmers University of Technology,Sweden,1829
-15,Royal Institute of Technology,Sweden,1827
-16,Umeå University,Sweden,1965
-17,National Defence University,Finland,1993
-18,National Defence University,Sweden,1993
-19,Växjö University,Sweden,1977
-20,Centre for Information Logistics,Sweden,2001
-21,Högskolan för scen och musik,Sweden,2005
-22,Red Cross University College of Nursing,Sweden,1867
-23,Sophiahemmet University College,Sweden,1884
+,universityLabel,placeLabel,countryLabel,yearFounded
+0,Lund University,Lund Municipality,Sweden,1666
+1,Karolinska Institute,Solna Municipality,Sweden,1810
+2,Stockholm University,Stockholm Municipality,Sweden,1878
+3,Luleå University of Technology,Luleå Municipality,Sweden,1971
+4,Norrland's University Hospital,Umeå Municipality,Sweden,1907
+5,Örebro University,Örebro Municipality,Sweden,1977
+6,Swedish University of Agricultural Sciences,Uppsala Municipality,Sweden,1977
+7,University of Borås,Borås,Sweden,1977
+8,Linnaeus University,Växjö Municipality,Sweden,2010
+9,Linnaeus University,Kalmar Municipality,Sweden,2010
+10,Karlstad University,Karlstad Municipality,Sweden,1977
+11,Mid Sweden University,Jämtland County,Sweden,1993
+12,Mid Sweden University,Västernorrland County,Sweden,1993
+13,Linköping University,Linköping Municipality,Sweden,1975
+14,Chalmers University of Technology,Gothenburg Municipality,Sweden,1829
+15,Royal Institute of Technology,Stockholm Municipality,Sweden,1827
+16,Umeå University,Umeå Municipality,Sweden,1965
+17,National Defence University,Helsinki,Sweden,1993
+18,Växjö University,Växjö Municipality,Sweden,1977
+19,Centre for Information Logistics,Ljungby Municipality,Sweden,2001
+20,Högskolan för scen och musik,Gothenburg,Sweden,2005
+21,Red Cross University College of Nursing,Stockholm,Sweden,1867
+22,Sophiahemmet University College,Stockholm,Sweden,1884
