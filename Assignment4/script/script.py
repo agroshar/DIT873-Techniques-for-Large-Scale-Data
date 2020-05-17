@@ -8,9 +8,6 @@ from queries import *
 def construct_dataframe_from_wikidata(query):
     def send_request():
         return requests.get('https://query.wikidata.org/sparql',
-                            headers={
-                                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 ('
-                                              'KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'},
                             params={'format': 'json',
                                     'query': query})
 
@@ -41,8 +38,8 @@ if __name__ == '__main__':
     universities_df = construct_dataframe_from_wikidata(universities_query)
     universities_df.to_csv('data/universities.csv')
 
-    alumni_df = construct_dataframe_from_wikidata(alumni_query)
-    alumni_df.to_csv('data/alumni.csv')
-
-    organisations_df = construct_dataframe_from_wikidata(organisations_query)
-    organisations_df.to_csv('data/organisations.csv')
+    # alumni_df = construct_dataframe_from_wikidata(alumni_query)
+    # alumni_df.to_csv('data/alumni.csv')
+    #
+    # organisations_df = construct_dataframe_from_wikidata(organisations_query)
+    # organisations_df.to_csv('data/organisations.csv')
