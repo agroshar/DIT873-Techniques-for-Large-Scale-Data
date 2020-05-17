@@ -15,18 +15,18 @@ WHERE
 """
 
 alumni_query = """
-SELECT ?alumnusLabel ?birthplaceLabel ?birthplacecountryLabel ?universityLabel
+SELECT ?alumnusLabel ?placeLabel ?countryLabel ?universityLabel
 
 WHERE
 {
   ?alumnus wdt:P69 ?university .
-
+  
   ?university wdt:P31 wd:Q3918 ;
               wdt:P17 wd:Q34 .
-
-  OPTIONAL {?alumnus wdt:P19 ?birthplace .
-            ?birthplace wdt:P17 ?birthplacecountry}
-
+  
+  OPTIONAL {?alumnus wdt:P19 ?place .
+            ?place wdt:P17 ?country .}
+  
   SERVICE wikibase:label {bd:serviceParam wikibase:language "en,sv,[AUTO_LANGUAGE]" .}
 }
 """
@@ -37,10 +37,10 @@ SELECT ?alumnusLabel ?organisationLabel ?placeLabel ?countryLabel
 WHERE
 {
   ?alumnus wdt:P69 ?university .
-
+  
   ?university wdt:P31 wd:Q3918 ;
               wdt:P17 wd:Q34 .
-
+  
   ?alumnus wdt:P108 ?organisation .
   OPTIONAL {?organisation wdt:P131 ?place .
             ?place wdt:P17 ?country .}

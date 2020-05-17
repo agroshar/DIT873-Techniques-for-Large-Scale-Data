@@ -20,13 +20,14 @@ def construct_dataframe_from_wikidata(query):
         resp = send_request()
 
     labels, records = [list(data.values())[0] for data in resp.json().values()]
+    labels = [label.rsplit('Label', 1)[0] for label in labels]
 
     print("Creating dataframe...")
     entries = []
     for record in records:
         entry = dict.fromkeys(labels)
         for label, values in record.items():
-            entry[label] = values['value']
+            entry[label.rsplit('Label', 1)[0]] = values['value']
         entries.append(entry)
 
     df = pd.DataFrame(entries, columns=labels)
@@ -38,8 +39,8 @@ if __name__ == '__main__':
     universities_df = construct_dataframe_from_wikidata(universities_query)
     universities_df.to_csv('data/universities.csv')
 
-    # alumni_df = construct_dataframe_from_wikidata(alumni_query)
-    # alumni_df.to_csv('data/alumni.csv')
-    #
-    # organisations_df = construct_dataframe_from_wikidata(organisations_query)
-    # organisations_df.to_csv('data/organisations.csv')
+    alumni_df = construct_dataframe_from_wikidata(alumni_query)
+    alumni_df.to_csv('data/alumni.csv')
+
+    organisations_df = construct_dataframe_from_wikidata(organisations_query)
+    organisations_df.to_csv('data/organisations.csv')
