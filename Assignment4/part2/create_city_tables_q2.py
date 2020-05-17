@@ -51,37 +51,37 @@ def create_north_south_csv_files(data):
     city_data = []
     for row in data.values:
         coordinates = re.split('\(| ',row[-1])
-        city_list = [row[0], int(row[1]), float(coordinates[1])]
+        city_list = [row[0], float(coordinates[1]), int(row[1])]
         if city_list in city_data or 'Municipality'in row[0] or 'urban area' in row[0]:
             continue
         city_data.append(city_list)
         
-    city_sorted_by_coor = sorted(city_data, key=lambda x: x[2], reverse=False)
+    city_sorted_by_coor = sorted(city_data, key=lambda x: x[1], reverse=False)
 
     city_north_result = []
     city_south_result = []
 
-    most_south_pop_temp = city_sorted_by_coor[0][1]
+    most_south_pop_temp = city_sorted_by_coor[0][2]
     city_south_result.append(city_sorted_by_coor[0])
 
     for i in range(1, len(city_sorted_by_coor)):
-        if most_south_pop_temp < city_sorted_by_coor[i][1]:
+        if most_south_pop_temp < city_sorted_by_coor[i][2]:
             city_south_result.append(city_sorted_by_coor[i])
-            most_south_pop_temp = city_sorted_by_coor[i][1]
+            most_south_pop_temp = city_sorted_by_coor[i][2]
 
-    most_north_pop_temp = city_sorted_by_coor[len(city_sorted_by_coor)-1][1]
+    most_north_pop_temp = city_sorted_by_coor[len(city_sorted_by_coor)-1][2]
     city_north_result.append(city_sorted_by_coor[len(city_sorted_by_coor)-1])
 
     for i in range( len(city_sorted_by_coor)-1, 0, -1):
-        if most_north_pop_temp < city_sorted_by_coor[i][1]:
+        if most_north_pop_temp < city_sorted_by_coor[i][2]:
             city_north_result.append(city_sorted_by_coor[i])
-            most_north_pop_temp = city_sorted_by_coor[i][1]
+            most_north_pop_temp = city_sorted_by_coor[i][2]
     print('Creating city tables ...')
 
-    df1 = pd.DataFrame(city_north_result, columns=['City', 'Population', 'Latitude'])
+    df1 = pd.DataFrame(city_north_result, columns=['City', 'Latitude', 'Population'])
     df1.to_csv('./data/northern_cities.csv')
 
-    df2 = pd.DataFrame(city_south_result, columns=['City', 'Population', 'Latitude'])
+    df2 = pd.DataFrame(city_south_result, columns=['City', 'Latitude', 'Population'])
     df2.to_csv('./data/southern_cities.csv')
     print('City tables were created.')
 
