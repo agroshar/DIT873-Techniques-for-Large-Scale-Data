@@ -1,0 +1,12 @@
+# Numbers of Chalmers alumnis in different organisations
+
+PREFIX : <http://www.semanticweb.org/julsz/ontologies/2020/4/assignment4#>
+
+SELECT ?organisation_name (COUNT(?alumni) AS ?chalmerists_count)
+WHERE
+{
+    ?alumni :alumnusOf [:organisationName "Chalmers University of Technology"];
+    		:employeeOf [:organisationName ?organisation_name].
+}
+GROUP BY ?organisation_name
+ORDER BY DESC(?chalmerists_count)

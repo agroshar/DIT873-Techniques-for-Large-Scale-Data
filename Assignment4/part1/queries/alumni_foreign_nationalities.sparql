@@ -1,0 +1,12 @@
+# The most common nationalities among foreign alumnis of Swedish universities
+
+PREFIX : <http://www.semanticweb.org/julsz/ontologies/2020/4/assignment4#>
+
+SELECT ?country (COUNT(?country) as ?alumnis_count)
+WHERE
+{
+    ?person :bornIn [:countryName ?country].
+    FILTER(?country != "Sweden")
+}
+GROUP BY ?country
+ORDER BY DESC(?alumnis_count)

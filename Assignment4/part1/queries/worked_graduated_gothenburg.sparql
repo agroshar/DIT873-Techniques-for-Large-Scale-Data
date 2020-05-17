@@ -1,0 +1,19 @@
+# The names of people who both have worked and graduated in Gothenburg
+
+PREFIX : <http://www.semanticweb.org/julsz/ontologies/2020/4/assignment4#>
+
+SELECT ?person_name ?university_name ?organisation_name
+WHERE
+{
+    ?person :personName ?person_name;
+    		:alumnusOf ?university;
+            :employeeOf ?organisation.
+
+    ?university :locatedIn [:placeName ?place_name];
+                :organisationName ?university_name.
+    FILTER regex(?place_name, "(Göteborg)|(Gothenburg)")
+
+    ?organisation :locatedIn [:placeName ?place_name];
+                  :organisationName ?organisation_name.
+    FILTER regex(?place_name, "(Göteborg)|(Gothenburg)")
+}
