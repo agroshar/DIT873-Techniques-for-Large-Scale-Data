@@ -1,3 +1,5 @@
+// Numbers of Chalmers alumnis in different organisations
+
 MATCH (org) <-[:employeeOf]-(person)-[:alumnusOf]->(:University {organisationName: 'Chalmers University of Technology'})
 WITH org, COUNT(*) AS chalmerists_count
 RETURN org, chalmerists_count
